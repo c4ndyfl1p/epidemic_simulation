@@ -18,7 +18,7 @@ function setup() {
 }
 
 function draw() {
-  background(0);
+  background(255);
 
   
 	// if (bubble1.intersects(bubble2)){
@@ -85,7 +85,7 @@ class Bubble {
   }
 
   show(){
-  	stroke(255);
+  	stroke(0);
   	strokeWeight(1);
   	noFill();
   	
@@ -93,7 +93,7 @@ class Bubble {
   }
 
   infect(){
-    stroke(255);
+    stroke(0);
     strokeWeight(1);
     //noFill();
     fill(100,125);
