@@ -1,7 +1,10 @@
-let bubbles = []
+let bubbles = [] //bubble = person
+
 mapSize_x = 600;
 mapSize_y = 400;
-
+maxDist = 10; //max distance a person can move in 1 refresh\
+infectionValue = 125;
+removalValue = 255;
 
 function setup() {
   createCanvas(mapSize_x, mapSize_y);
@@ -9,18 +12,20 @@ function setup() {
   // bubble1 = new Bubble(200,200,50);
   // bubble2 = new Bubble(300,200,50);
 
-  for(let i = 0; i <10; i++){
-	let x = random(width);
-  	let y = random(height);
-  	bubbles[i] = new Bubble(x,y,20);
-  }
+
+  //creating n number of bubbles/people
+  for(let i = 0; i <40; i++){
+	let x = random(width-10);
+  let y = random(height-10);
+  bubbles[i] = new Bubble(x,y,10);
+  } 
+
+  //choosing  an infected bubble from all the bubbles 
   bad = bubbles[Math.floor(Math.random() * bubbles.length)];
 }
 
 function draw() {
-  background(255);
-
-  
+  background(0);  
 	// if (bubble1.intersects(bubble2)){
 	// 	background(200, 0, 100);	
 	// } 
@@ -33,70 +38,93 @@ function draw() {
   for (b of bubbles){
   	b.move();
   	b.show();
-    bad.infect();
+    bad.changeColorInfect();
+    // for(other of bubbles){
+    //   if (bad !== other && bad.intersects(other)) {
+    //    other.changeColorInfect();
+    //   }	
 
-    
-    
-  	for(other of bubbles){
-  		if (bad !== other && bad.intersects(other)) {
-  			other.infect();
-  		}
-	
-   }
-  }
+    for(i of bubbles){
+      for(j of bubbles){
+        if (i !== j && i.intersects(j)){
+          if(i.brightness + j.brightness >= infectionValue && i.brightness + j.brightness < removalValue){
+            i.changeColorInfect();
+            j.changeColorInfect();
+          }
+        }
+      }
+    }
+    //for(all the bubble){
+    //if (any 2 bubbles with this.brightness > 255 intersect){ 
+    //  changeColorInfect both
+    //}
 
-  
+    //}
+
+
+  //   }
+  }  
 }
-
-
 class Bubble {
-  constructor(x, y, r  ){
+  constructor(x, y, r ){
   	this.x = x;
   	this.y = y;
   	this.r = r; 
-  	
+  	this.brightness=0; //brightness = 0 :okay  brightness = 255 :infected
   }
-
-
 
   intersects(other){
   	let d = dist(this.x, this.y, other.x, other.y);
-  	return (d < this.r + other.r);
-  	// if (    d < this.r + other.r   ){
-  	// 	return true;
-  	// }
-  	// else{
-  	// 	return false;
-  	// }
-  	
+  	return (d < this.r + other.r);  	
+  }
+  // infect() : if a bubble/person is infected it changes color
+  changeColorInfect(){
+    this.brightness = infectionValue;    
+    //this.brightness = removalvalue after x seconds og changeColorInfect;
+    var that = this;
+
+    //setTimeout(changeColorRemove(){that.brightness = removalvalue;}, 5000); //this?
+    //setInterval(function(){alert("Hello")},3000);
   }
 
+  // changeColorRemove(){
+  //   this.brightness = removedValue;
+  // }
+
+  
   move(){
-    if (this.x < mapSize_x){
-      this.x = this.x + random(-5,5);
+    if (this.x < mapSize_x && this.x !== 0){
+      this.x = this.x + random(-maxDist,maxDist);
     } 
-    else {this.x = this.x + 0}
+    else if (this.x < this.r){
+      this.x = this.x + random(maxDist)
+    }
+    else {this.x = this.x + random(-maxDist)}
 
 
     if (this.y < mapSize_y){
-  	this.y = this.y + random(-5,5);
+  	this.y = this.y + random(-maxDist,maxDist);
     }
-    else {this.y = this.y + 0}
+    else if (this.y < this.r){
+      this.y = this.y + random(maxDist)
+    }
+    else {this.y = this.y + random(-maxDist)}
   }
 
   show(){
-  	stroke(0);
+  	stroke(255);
   	strokeWeight(1);
-  	noFill();
+  	//noFill();
+    fill(this.brightness)
   	
   	ellipse(this.x, this.y, this.r*2)
   }
 
   infect(){
-    stroke(0);
+    stroke(255);
     strokeWeight(1);
     //noFill();
-    fill(100,125);
+    fill(this.brightness=255, 125);
     ellipse(this.x, this.y, this.r*2)
   }
 
