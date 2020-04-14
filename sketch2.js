@@ -81,7 +81,8 @@ class Bubble {
   changeColorInfect(){
     this.brightness = infectionValue;    
     //this.brightness = removalvalue after x seconds og changeColorInfect;
-    var that = this;
+    //var that = this;
+    setTimeout(()=>{this.brightness = removalValue}, 5000)
 
     //setTimeout(changeColorRemove(){that.brightness = removalvalue;}, 5000); //this?
     //setInterval(function(){alert("Hello")},3000);
